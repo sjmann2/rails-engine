@@ -54,19 +54,58 @@ describe "Merchants API" do
       end
     end
 
-  # describe "when the record does not exist" do
-  #   it 'returns a status code 404' do
-  #     get "/api/v1/merchants/1"
+  describe "when the record does not exist" do
+    it 'returns a status code 404' do
+      get "/api/v1/merchants/1"
 
-  #     # merchant = JSON.parse(response.body, symbolize_names: true)
-  #     # expect(response).to be_successful
-  #     expect(response).to have_http_status(404)
-  #   end
+      expect(response).to have_http_status(404)
+    end
 
-  #   it 'returns a not found message' do
-  #     get "/api/v1/merchants/1"
-  #     # merchant = JSON.parse(response.body, symbolize_names: true)
-  #     expect(response.body).to match(/Couldn't find Merchant/)
-  #   end
-  # end
+    it 'returns a not found message' do
+      get "/api/v1/merchants/1"
+
+      expect(response.body).to match(/Couldn't find Merchant/)
+    end
+  end
+
+  describe 'GET /merchants/:id/items' do
+    describe 'when the record exists' do
+      it 'returns all items for a given merchant' do
+        merchant = create(:merchant)
+        items = create_list(:item, 3, merchant: merchant)
+
+        get "/api/v1/merchants/#{merchant.id}/items"
+
+        expect(response).to be_successful
+        expect(response).to have_http_status(200)
+        items = JSON.parse(response.body, symbolize_names: true)
+
+        expect(items[:data].count).to eq(3)
+   
+        expect(items[:data][0]).to have_key(:id)
+        # expect(items[:data][0][:id]).to be_an(Integer)
+        #should this be a string or should I be able to access it as an integer?
+        expect(items[:data][0][:attributes]).to have_key(:name)
+        expect(items[:data][0][:attributes][:name]).to be_a(String)
+        expect(items[:data][0][:attributes]).to have_key(:description)
+        expect(items[:data][0][:attributes][:description]).to be_a(String)
+        expect(items[:data][0][:attributes]).to have_key(:unit_price)
+        expect(items[:data][0][:attributes][:unit_price]).to be_a(Float)
+      end
+    end
+
+    describe 'when the record does not exist' do
+      it 'returns a status code 404' do
+        get "/api/v1/merchants/1/items"
+        
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns a not found message' do
+        get "/api/v1/merchants/1/items"
+
+        expect(response.body).to match(/Couldn't find Merchant/)
+      end
+    end
+  end
 end
