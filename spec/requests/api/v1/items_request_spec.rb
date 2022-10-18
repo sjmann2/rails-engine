@@ -80,4 +80,45 @@ describe 'Items API' do
       end
     end
   end
+
+  describe 'POST /api/v1/items' do
+    it 'can create a new item' do
+      merchant = create(:merchant)
+
+      item_params = ({
+        name: "Coffee Mug",
+        description: "Keeps things warm",
+        unit_price: 19.99,
+        merchant_id: merchant.id
+      })
+
+      headers = {"CONTENT_TYPE" => "application/json"}
+      post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+      created_item = Item.last
+
+      expect(response).to be_successful
+      expect(response).to have_http_status(201)
+
+      expect(created_item.name).to eq(item_params[:name])
+      expect(created_item.description).to eq(item_params[:description])
+      expect(created_item.unit_price).to eq(item_params[:unit_price])
+      expect(created_item.merchant_id).to eq(item_params[:merchant_id])
+    end
+  end
+
+  describe 'UPDATE /api/v1/books/:id' do
+    it 'can update an existing item' do
+      id = create(:item).id
+      previous_name = Item.last.name
+      item_params = {name: 'Coffee Mug'}
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+      item = Item.find_by(id: id)
+
+      expect(response).to be_successful
+      expect(item.name).to_not eq(previous_name)
+      expect(item.name).to eq('Insulated Coffee Mug')
+    end
+  end
 end
