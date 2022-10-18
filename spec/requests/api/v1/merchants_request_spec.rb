@@ -94,18 +94,18 @@ describe "Merchants API" do
       end
     end
 
-    # describe 'when the record does not exist' do
-    #   it 'returns a status code 404' do
-    #     get "/api/v1/merchants/1/items"
+    describe 'when the record does not exist' do
+      it 'returns a status code 404' do
+        get "/api/v1/merchants/1/items"
         
-    #     expect(response).to have_http_status(404)
-    #   end
+        expect(response).to have_http_status(404)
+      end
 
-    #   it 'returns a not found message' do
-    #     get "/api/v1/merchants/1/items"
+      it 'returns a not found message' do
+        get "/api/v1/merchants/1/items"
 
-    #     expect(response.body).to match(/Couldn't find Merchant/)
-    #   end
-    # end
+        expect(response.body).to match(/Couldn't find Merchant/)
+      end
+    end
   end
 end
