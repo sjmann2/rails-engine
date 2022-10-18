@@ -1,4 +1,3 @@
-#get all merchants
 require 'rails_helper'
 
 describe "Merchants API" do
@@ -15,6 +14,7 @@ describe "Merchants API" do
       merchants = JSON.parse(response.body, symbolize_names: true)
       # now that we have a ruby object, we can make assertions about it
       expect(merchants[:data].count).to eq(3)
+
       merchants.each do |merchant|
         expect(merchant[1][0][:attributes]).to have_key(:name)
         expect(merchant[1][0][:attributes][:name]).to be_a(String)
@@ -94,18 +94,18 @@ describe "Merchants API" do
       end
     end
 
-    describe 'when the record does not exist' do
-      it 'returns a status code 404' do
-        get "/api/v1/merchants/1/items"
+    # describe 'when the record does not exist' do
+    #   it 'returns a status code 404' do
+    #     get "/api/v1/merchants/1/items"
         
-        expect(response).to have_http_status(404)
-      end
+    #     expect(response).to have_http_status(404)
+    #   end
 
-      it 'returns a not found message' do
-        get "/api/v1/merchants/1/items"
+    #   it 'returns a not found message' do
+    #     get "/api/v1/merchants/1/items"
 
-        expect(response.body).to match(/Couldn't find Merchant/)
-      end
-    end
+    #     expect(response.body).to match(/Couldn't find Merchant/)
+    #   end
+    # end
   end
 end
