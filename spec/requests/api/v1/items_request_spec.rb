@@ -128,7 +128,7 @@ describe 'Items API' do
 
   describe 'PATCH /api/v1/books/:id' do
     describe 'when the record exists' do
-      xit 'can update an existing item' do
+      it 'can update an existing item' do
         id = create(:item).id
 
         previous_name = Item.last.name
@@ -137,12 +137,27 @@ describe 'Items API' do
 
         put "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
         item = Item.find_by(id: id)
+
         expect(response).to be_successful
-        expect(response).to have_http_status(202)
+        expect(response).to have_http_status(200)
         expect(item.name).to_not eq(previous_name)
         expect(item.name).to eq('Insulated Coffee Mug')
       end
     end
+
+    describe 'when the record does not exist' do
+      it 'returns a status code 404' do
+        item_params = {name: 'Insulated Coffee Mug'}
+
+        put "/api/v1/items/1", headers: headers, params: JSON.generate({item: item_params})
+
+        expect(response).to have_http_status(404)
+      end
+    end
+
+    # describe 'when a merchant does not exist' do
+      
+    # end
   end
 
   describe 'GET /api/v1/items/:id/merchant' do
