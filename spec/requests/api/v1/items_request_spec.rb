@@ -212,4 +212,45 @@ describe 'Items API' do
       end
     end
   end
+
+  describe 'GET /api/v1/items/find' do
+    describe 'when the record exists' do
+      let!(:merchant) {create(:merchant)}
+      let!(:item_1) { Item.create!(name: "Coffee Mug", description: "Keeps things warm", unit_price: 19.99, merchant_id: merchant.id)}
+      let!(:item_2) { Item.create!(name: "Mr Coffee", description: "Brews coffee", unit_price: 29.99, merchant_id: merchant.id)}
+
+      it 'returns a single item which matches a search term' do
+        get "/api/v1/items/find?name=Mug"
+        
+        expect(response).to be_successful
+        expect(response).to have_http_status(200)
+
+        item = JSON.parse(response.body, symbolize_names: true)
+        expect(item[:data][:attributes][:name]).to eq("Coffee Mug")
+      end
+
+      it 'returns the first item alphabetically if a search returns more than one match' do
+        get "/api/v1/items/find?name=coffee"
+        
+        expect(response).to be_successful
+        expect(response).to have_http_status(200)
+
+        item = JSON.parse(response.body, symbolize_names: true)
+        expect(item[:data][:attributes][:name]).to eq("Coffee Mug")
+      end
+
+      # add tests for min and max price search features
+    end
+
+    describe 'when the record does not exist' do
+      it 'returns an empty array' do
+        get "/api/v1/items/find?name=beans"
+
+        expect(response).to be_successful
+        expect(response).to have_http_status(200)
+
+        expect(response.body).to match(/No items match/)
+      end
+    end
+  end
 end

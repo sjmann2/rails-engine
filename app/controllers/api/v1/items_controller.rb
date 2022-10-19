@@ -30,6 +30,15 @@ class Api::V1::ItemsController < ApplicationController
     # end
   end
 
+  def search
+    item = Item.find_one_item(params[:name])
+    if item == nil
+      render json: {data: {undefined: "No items match that search criteria"}}
+    else
+      json_response(ItemSerializer.new(item))
+    end
+  end
+
   private
   
   def set_item
