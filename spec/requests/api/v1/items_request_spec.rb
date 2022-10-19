@@ -135,7 +135,7 @@ describe 'Items API' do
         item_params = {name: 'Insulated Coffee Mug'}
         headers = {"CONTENT_TYPE" => "application/json"}
 
-        put "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+        patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
         item = Item.find_by(id: id)
 
         expect(response).to be_successful
@@ -155,9 +155,27 @@ describe 'Items API' do
       end
     end
 
-    # describe 'when a merchant does not exist' do
-      
-    # end
+    describe 'when a merchant does not exist' do
+      it 'returns a status code 404' do
+        item = Item.new(name: "Coffee Mug", description: "Keeps things warm", unit_price: 19.99)
+
+        item_params = {name: 'Insulated Coffee Mug'}
+
+        patch "/api/v1/items/1", headers: headers, params: JSON.generate({item: item_params})
+
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns a not found message' do
+        item = Item.new(name: "Coffee Mug", description: "Keeps things warm", unit_price: 19.99)
+
+        item_params = {name: 'Insulated Coffee Mug'}
+
+        patch "/api/v1/items/1", headers: headers, params: JSON.generate({item: item_params})
+        
+        expect(response.body).to match(/Couldn't find Item/)
+      end
+    end
   end
 
   describe 'GET /api/v1/items/:id/merchant' do
