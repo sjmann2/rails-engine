@@ -263,7 +263,10 @@ describe 'Items API' do
         expect(response).to be_successful
         expect(response).to have_http_status(200)
 
-        expect(response.body).to match(/No items match/)
+        item = JSON.parse(response.body, symbolize_names: true)
+
+        expect(item).to have_key(:data)
+        expect(item[:data]).to eq({})
       end
     end
   end

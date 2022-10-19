@@ -18,7 +18,6 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def update 
-    # require 'pry' ; binding.pry
     if params[:item][:merchant_id]
       if Merchant.find_by(id: merchant_id = params[:item][:merchant_id]) == nil
         render status: 404
@@ -29,22 +28,6 @@ class Api::V1::ItemsController < ApplicationController
     else    
       item = Item.update(params[:id], item_params)
       render json: ItemSerializer.new(item)
-    end
-
-    # item = Item.update(params[:id], item_params)
-    # if item.merchant_id == nil
-    #   render status: 404
-    # else
-    #   render json: ItemSerializer.new(item)
-    # end
-  end
-
-  def search_name
-    item = Item.find_one_item(params[:name])
-    if item == nil
-      render json: {data: {}}
-    else
-      json_response(ItemSerializer.new(item))
     end
   end
 
