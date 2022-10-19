@@ -206,11 +206,13 @@ describe 'Items API' do
   end
 
   describe 'GET /api/v1/items/find' do
-    describe 'when the record exists' do
-      let!(:merchant) {create(:merchant)}
-      let!(:item_1) { Item.create!(name: "Coffee Mug", description: "Keeps things warm", unit_price: 19.99, merchant_id: merchant.id)}
-      let!(:item_2) { Item.create!(name: "Mr Coffee", description: "Brews coffee", unit_price: 29.99, merchant_id: merchant.id)}
+    let!(:merchant) {create(:merchant)}
+    let!(:item_1) { Item.create!(name: "Coffee Mug", description: "Keeps things warm", unit_price: 19.99, merchant_id: merchant.id)}
+    let!(:item_2) { Item.create!(name: "Mr Coffee", description: "Brews coffee", unit_price: 29.99, merchant_id: merchant.id)}
+    let!(:item_3) { Item.create!(name: "Mx Coffee", description: "Brews coffee again", unit_price: 65.00, merchant_id: merchant.id)}
+    let!(:item_4) { Item.create!(name: "French Press", description: "Brews coffee also", unit_price: 25.00, merchant_id: merchant.id)}
 
+    describe 'when the record exists' do
       it 'returns a single item which matches a search term' do
         get "/api/v1/items/find?name=Mug"
         
@@ -233,6 +235,14 @@ describe 'Items API' do
 
       it 'returns a single item which matches a minimum price search' do
         get "/api/v1/items/find?min_price=50"
+
+        expect(response).to be_successful
+        expect(response).to have_http_status(200)
+
+        item = JSON.parse(response.body, symbolize_names: true)
+
+        expect(item[:data][:attributes]).to have_key(:name)
+        expect(item[:data][:attributes][:name]).to eq("Mx Coffee")
       end
 
       xit 'returns a single item which matches a maximum price search' do
