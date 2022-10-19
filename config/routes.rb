@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       end
 
       resources :merchants, only: [:index, :show] do
-        resources :items, only: [:index] #could direct this to controller: 'merchant_items'
+        resources :items, only: [:index], controller: 'merchant_items'
       end
     end
   end

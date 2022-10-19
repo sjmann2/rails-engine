@@ -1,13 +1,7 @@
 class Api::V1::ItemsController < ApplicationController
   before_action :set_item, only: [:show, :update]
   def index
-    if params[:merchant_id]
-      items = Merchant.find(params[:merchant_id]).items
-      
-      json_response(ItemSerializer.new(items))
-    else
-      render json: ItemSerializer.new(Item.all)
-    end
+    render json: ItemSerializer.new(Item.all)
   end
 
   def show
