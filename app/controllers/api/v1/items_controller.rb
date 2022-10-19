@@ -19,10 +19,15 @@ class Api::V1::ItemsController < ApplicationController
     json_response(ItemSerializer.new(item), :created)
   end
 
-  # def update
-  #   require 'pry' ; binding.pry
-  #   @item.update(item_params)
-  # end
+  def destroy
+    json_response(Item.delete(params[:id]))
+  end
+
+  def update 
+    require 'pry' ; binding.pry
+    ItemSerializer.new(@item.update(item_params))
+    head :accepted
+  end
 
   private
   
