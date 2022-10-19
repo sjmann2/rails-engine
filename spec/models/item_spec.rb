@@ -8,7 +8,7 @@ RSpec.describe Item, type: :model do
   describe 'validations' do
     it { should validate_presence_of :name }
     it { should validate_presence_of :description }
-    it { should validate_presence_of :unit_price }
+    it { should validate_numericality_of(:unit_price).is_greater_than(0)}
   end
 
   describe 'class methods' do
@@ -65,7 +65,7 @@ RSpec.describe Item, type: :model do
       let!(:item_4) { Item.create!(name: "French Press", description: "Brews coffee also", unit_price: 25.00, merchant_id: merchant.id)}
 
       it 'returns a single item which matches a minimum and maximum price given, if more than one is returned the first alphabetically is returned' do
-        expect(Item.min_and_max_price(10.50, 26.50)).to eq(item_1)
+        expect(Item.min_and_max_price(19.99, 26.50)).to eq(item_1)
         expect(Item.min_and_max_price(20, 30.50)).to eq(item_4)
       end
 

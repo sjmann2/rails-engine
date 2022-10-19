@@ -211,6 +211,7 @@ describe 'Items API' do
     let!(:item_2) { Item.create!(name: "Mr Coffee", description: "Brews coffee", unit_price: 29.99, merchant_id: merchant.id)}
     let!(:item_3) { Item.create!(name: "Mx Coffee", description: "Brews coffee again", unit_price: 65.00, merchant_id: merchant.id)}
     let!(:item_4) { Item.create!(name: "French Press", description: "Brews coffee also", unit_price: 25.00, merchant_id: merchant.id)}
+    let!(:item_4) { Item.create!(name: "Pour Over", description: "Guess what it does", unit_price: 155.00, merchant_id: merchant.id)}
 
     describe 'when the record exists' do
       it 'returns a single item which matches a search term' do
@@ -245,24 +246,59 @@ describe 'Items API' do
         expect(item[:data][:attributes][:name]).to eq("Mx Coffee")
       end
 
-      xit 'returns a single item which matches a maximum price search' do
+      it 'returns a single item which matches a maximum price search' do
         get "/api/v1/items/find?max_price=150"
+
+        expect(response).to be_successful
+        expect(response).to have_http_status(200)
+
+        item = JSON.parse(response.body, symbolize_names: true)
+
+        expect(item[:data][:attributes]).to have_key(:name)
+        expect(item[:data][:attributes][:name]).to eq("Coffee Mug")
       end
 
-      xit 'returns a single item which matches both a minimum and maximum price search' do
+      it 'returns a single item which matches both a minimum and maximum price search' do
         get "/api/v1/items/find?max_price=150&min_price=50"
+
+        expect(response).to be_successful
+        expect(response).to have_http_status(200)
+
+        item = JSON.parse(response.body, symbolize_names: true)
+
+        expect(item[:data][:attributes]).to have_key(:name)
+        expect(item[:data][:attributes][:name]).to eq("Mx Coffee")
       end
 
-      xit 'cannnot search both name and min price at the same time' do
+      it 'cannnot search both name and min price at the same time' do
         get "/api/v1/items/find?name=ring&min_price=50"
+
+        expect(response).to have_http_status(400)
       end
 
-      xit 'cannot search both name and max price at the same time' do
+      it 'cannot search both name and max price at the same time' do
         get "/api/v1/items/find?name=ring&max_price=50"
+
+        expect(response).to have_http_status(400)
       end
 
-      xit 'cannot search both name, min price, and max price at the same time' do
+      it 'cannot search a negative number for minimum price' do
+        get "/api/v1/items/find?min_price=-50"
+
+        expect(response).to have_http_status(400)
+
+      end
+
+      it 'cannot search a negative number for maximum price' do
+        get "/api/v1/items/find?max_price=-50"
+
+        expect(response).to have_http_status(400)
+      end
+
+      it 'cannot search both name, min price, and max price at the same time' do
         get "/api/v1/items/find?name=ring&min_price=50&max_price=250"
+
+        expect(response).to have_http_status(400)
       end
     end
 
