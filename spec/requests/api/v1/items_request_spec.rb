@@ -148,8 +148,9 @@ describe 'Items API' do
     describe 'when the record does not exist' do
       it 'returns a status code 404' do
         item_params = {name: 'Insulated Coffee Mug'}
+        headers = {"CONTENT_TYPE" => "application/json"}
 
-        put "/api/v1/items/1", headers: headers, params: JSON.generate({item: item_params})
+        patch "/api/v1/items/1", headers: headers, params: JSON.generate({item: item_params})
 
         expect(response).to have_http_status(404)
       end
@@ -157,23 +158,14 @@ describe 'Items API' do
 
     describe 'when a merchant does not exist' do
       it 'returns a status code 404' do
-        item = Item.new(name: "Coffee Mug", description: "Keeps things warm", unit_price: 19.99)
+        id = create(:item).id
 
-        item_params = {name: 'Insulated Coffee Mug'}
+        item_params = {merchant_id: 10000}
+        headers = {"CONTENT_TYPE" => "application/json"}
 
-        patch "/api/v1/items/1", headers: headers, params: JSON.generate({item: item_params})
+        patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
 
         expect(response).to have_http_status(404)
-      end
-
-      it 'returns a not found message' do
-        item = Item.new(name: "Coffee Mug", description: "Keeps things warm", unit_price: 19.99)
-
-        item_params = {name: 'Insulated Coffee Mug'}
-
-        patch "/api/v1/items/1", headers: headers, params: JSON.generate({item: item_params})
-        
-        expect(response.body).to match(/Couldn't find Item/)
       end
     end
   end
@@ -239,7 +231,29 @@ describe 'Items API' do
         expect(item[:data][:attributes][:name]).to eq("Coffee Mug")
       end
 
-      # add tests for min and max price search features
+      it 'returns a single item which matches a minimum price search' do
+        get "/api/v1/items/find?min_price=50"
+      end
+
+      xit 'returns a single item which matches a maximum price search' do
+        get "/api/v1/items/find?max_price=150"
+      end
+
+      xit 'returns a single item which matches both a minimum and maximum price search' do
+        get "/api/v1/items/find?max_price=150&min_price=50"
+      end
+
+      xit 'cannnot search both name and min price at the same time' do
+        get "/api/v1/items/find?name=ring&min_price=50"
+      end
+
+      xit 'cannot search both name and max price at the same time' do
+        get "/api/v1/items/find?name=ring&max_price=50"
+      end
+
+      xit 'cannot search both name, min price, and max price at the same time' do
+        get "/api/v1/items/find?name=ring&min_price=50&max_price=250"
+      end
     end
 
     describe 'when the record does not exist' do
