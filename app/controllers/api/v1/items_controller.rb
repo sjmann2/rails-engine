@@ -20,13 +20,12 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def destroy
-    json_response(Item.delete(params[:id]))
+    render json: Item.delete(params[:id])
   end
 
   def update 
-    require 'pry' ; binding.pry
-    ItemSerializer.new(@item.update(item_params))
-    head :accepted
+    render json: ItemSerializer.new(@item.update(item_params))
+    # render json: ItemSerializer.new(@item.update(item_params))
   end
 
   private
