@@ -14,8 +14,16 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def destroy
-    require 'pry' ; binding.pry
+    invoice_items = InvoiceItem.where(item_id: params[:id])
+    invoice_ids = invoice_items.pluck(:invoice_id)
+    # I want to look at this invoice item, check it's invoice_id, check how many invoice items this id is on
+    invoice_items.delete_all
     render json: Item.delete(params[:id])
+    filtered_invoice_ids = Invoice.empty_invoices(invoice_ids)
+    # require 'pry' ; binding.pry
+    filtered_invoice_ids.each do |id|
+      Invoice.find(id).delete
+    end
   end
 
   def update 
