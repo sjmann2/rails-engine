@@ -123,6 +123,10 @@ describe 'Items API' do
         expect(response).to be_successful
         expect{Item.find(created_item.id)}.to raise_error(ActiveRecord::RecordNotFound)
       end
+
+      it 'deletes an invoice along with the item if that was the only item on the invoice' do
+        invoice = Invoice.create!()
+      end
     end
   end
 

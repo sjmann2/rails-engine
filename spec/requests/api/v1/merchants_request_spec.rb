@@ -83,8 +83,6 @@ describe "Merchants API" do
         expect(items[:data].count).to eq(3)
    
         expect(items[:data][0]).to have_key(:id)
-        expect(items[:data][0][:id]).to be_an(String)
-        #should this be a string or should I be able to access it as an integer?
         expect(items[:data][0][:attributes]).to have_key(:name)
         expect(items[:data][0][:attributes][:name]).to be_a(String)
         expect(items[:data][0][:attributes]).to have_key(:description)
