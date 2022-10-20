@@ -21,9 +21,12 @@ RSpec.describe Item, type: :model do
         expect(Item.item_by_name("coffee")).to eq(item_1)
       end
 
+      it 'returns a single item regardless of casing' do
+        expect(Item.item_by_name("cOFFEe")).to eq(item_1)
+      end
+
       it 'returns nil if no item matches the search criteria' do
         expect(Item.item_by_name("beans")).to eq(nil)
-        #maybe change this so it returns something other than nil
       end
     end
 

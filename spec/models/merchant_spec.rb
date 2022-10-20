@@ -22,5 +22,9 @@ RSpec.describe Merchant, type: :model do
     it 'returns an empty array if no merchants match the criteria' do
       expect(Merchant.search_by_name('Icing')).to eq([])
     end
+
+    it 'returns a merchant name regardless of casing' do
+      expect(Merchant.search_by_name('tOPic')).to eq([merchant_4])
+    end
   end
 end
