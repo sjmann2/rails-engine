@@ -5,6 +5,6 @@ class Invoice < ApplicationRecord
 
   def self.empty_invoices(invoice_ids)
     # I want to look at the invoice item for these invoice ids, check how many invoice items this id is on
-    joins(:invoice_items).where(id: invoice_ids).having("count(invoice_items) = 0").group(:id).pluck(:id)
+    left_joins(:invoice_items).where(id: invoice_ids).having("count(invoice_items) = 0").group(:id).pluck(:id)
   end
 end

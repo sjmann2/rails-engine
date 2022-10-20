@@ -125,7 +125,7 @@ describe 'Items API' do
       end
 
       it 'deletes an invoice along with the item if that was the only item on the invoice' do
-        customer = Customer.create!(first_name: 'Sid', last_name: 'Mann')
+        customer = Customer.create!(first_name: 'Barbara', last_name: 'Walters')
         merchant = create(:merchant)
         invoice_1 = Invoice.create!(customer_id: customer.id, merchant_id: merchant.id, status: 'shipped')
         invoice_2 = Invoice.create!(customer_id: customer.id, merchant_id: merchant.id, status: 'shipped')
@@ -133,11 +133,14 @@ describe 'Items API' do
         item_1 = create(:item)
         item_2 = create(:item)
 
-        invoice_item_1 = InvoiceItem.create!(item_id: item_1.id, invoice_id: invoice_1.id, quantity: 1, unit_price: 10.99)
-        invoice_item_2 = InvoiceItem.create!(item_id: item_2.id, invoice_id: invoice_1.id, quantity: 1, unit_price: 10.99)
+        invoice_item_1 = InvoiceItem.create!(item_id: item_1.id, invoice_id: invoice_1.id, quantity: 1, unit_price: 12.99)
+        invoice_item_2 = InvoiceItem.create!(item_id: item_2.id, invoice_id: invoice_1.id, quantity: 1, unit_price: 19.99)
         invoice_item_3 = InvoiceItem.create!(item_id: item_1.id, invoice_id: invoice_2.id, quantity: 1, unit_price: 10.99)
-#it should delete invoice 2 but not invoice 1
+        
         delete "/api/v1/items/#{item_1.id}"
+        expect{Item.find(item_1.id)}.to raise_error(ActiveRecord::RecordNotFound)
+        expect{Invoice.find(invoice_2.id)}.to raise_error(ActiveRecord::RecordNotFound)
+        expect(Invoice.find(invoice_1.id)).to eq(invoice_1)
       end
     end
   end
