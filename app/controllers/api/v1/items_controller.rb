@@ -14,6 +14,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def destroy
+    require 'pry' ; binding.pry
     render json: Item.delete(params[:id])
   end
 
