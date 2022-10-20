@@ -1,5 +1,5 @@
 class Api::V1::ItemsController < ApplicationController
-  before_action :set_item, only: [:show, :update]
+  before_action :set_item, only: [:show]
   def index
     render json: ItemSerializer.new(Item.all)
   end
@@ -14,20 +14,22 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def destroy
+    require 'pry' ; binding.pry
     render json: Item.delete(params[:id])
   end
 
   def update 
-    item = Item.update(params[:id], item_params)
-    render json: ItemSerializer.new(item)
-
-    # item = Item.update(params[:id], item_params)
-
-    # if item.merchant_id == nil
-    #   render status: 404
-    # else
-    #   render json: ItemSerializer.new(item)
-    # end
+    if params[:item][:merchant_id]
+      if Merchant.find_by(id: merchant_id = params[:item][:merchant_id]) == nil
+        render status: 404
+      else
+        item = Item.update(params[:id], item_params)
+        render json: ItemSerializer.new(item)
+      end
+    else    
+      item = Item.update(params[:id], item_params)
+      render json: ItemSerializer.new(item)
+    end
   end
 
   private

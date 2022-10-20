@@ -83,8 +83,6 @@ describe "Merchants API" do
         expect(items[:data].count).to eq(3)
    
         expect(items[:data][0]).to have_key(:id)
-        expect(items[:data][0][:id]).to be_an(String)
-        #should this be a string or should I be able to access it as an integer?
         expect(items[:data][0][:attributes]).to have_key(:name)
         expect(items[:data][0][:attributes][:name]).to be_a(String)
         expect(items[:data][0][:attributes]).to have_key(:description)
@@ -105,6 +103,41 @@ describe "Merchants API" do
         get "/api/v1/merchants/1/items"
 
         expect(response.body).to match(/Couldn't find Merchant/)
+      end
+    end
+  end
+
+  describe 'GET /api/vi/merchants/find_all' do
+    let!(:merchant_1) {Merchant.create!(name: 'Claires')}
+    let!(:merchant_2) {Merchant.create!(name: 'Claires 2')}
+    let!(:merchant_3) {Merchant.create!(name: 'Spencers')}
+    let!(:merchant_4) {Merchant.create!(name: 'Hot Topic')}
+    let!(:merchant_5) {Merchant.create!(name: 'Hot Sneakers')}
+
+    describe 'when the record exists' do
+      it 'it returns all merchants that match the given search term' do
+        get '/api/v1/merchants/find_all?name=hot'
+
+        expect(response).to be_successful
+        expect(response).to have_http_status(200)
+
+        merchants = JSON.parse(response.body, symbolize_names: true)
+
+        expect(merchants[:data].count).to eq(2)
+        expect(merchants[:data][0][:attributes][:name]).to eq("Hot Topic")
+        expect(merchants[:data][1][:attributes][:name]).to eq("Hot Sneakers")
+      end
+    end
+
+    describe 'when the record does not exist' do
+      it 'returns an empty array' do
+        get '/api/v1/merchants/find_all?name=icing'
+
+        expect(response).to be_successful
+        expect(response).to have_http_status(200)
+
+        merchants = JSON.parse(response.body, symbolize_names: true)
+        expect(merchants[:data]).to eq([])
       end
     end
   end
