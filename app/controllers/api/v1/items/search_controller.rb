@@ -1,8 +1,7 @@
 class Api::V1::Items::SearchController < ApplicationController
-  def find   
-    if min_or_max_price_and_name_present?
-      render_error
-    elsif negative_prices?
+  def find 
+      # require 'pry' ; binding.pry
+    if min_or_max_price_and_name_present? || negative_prices? || price_invalid?
       render_error
     elsif min_and_max_present?
       search_min_max_price(params[:min_price], params[:max_price])
@@ -16,6 +15,10 @@ class Api::V1::Items::SearchController < ApplicationController
   end
 
   private
+
+  def price_invalid?
+    !((params[:min_price] || params[:max_price]) || params[:name]).present? || (min_and_max_present? && min_greater_than_max?)
+  end
 
   def search_name(params)
     item = Item.item_by_name(params)
@@ -45,6 +48,10 @@ class Api::V1::Items::SearchController < ApplicationController
 
   def min_and_max_present?
     (params[:min_price] && params[:max_price]).present?
+  end
+
+  def min_greater_than_max?
+    params[:min_price].to_i > params[:max_price].to_i
   end
 
   def search_min_max_price(min_price, max_price)
