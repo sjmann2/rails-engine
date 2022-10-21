@@ -1,9 +1,10 @@
 class Api::V1::Items::SearchController < ApplicationController
-  def find 
-      # require 'pry' ; binding.pry
-    if min_or_max_price_and_name_present? || negative_prices? || price_invalid?
+  def find   
+    if (params[:min_price] && params[:name]).present? || (params[:max_price] && params[:name]).present?
       render_error
-    elsif min_and_max_present?
+    elsif (params[:min_price] || params[:max_price]).to_i < 0
+      render_error
+    elsif (params[:min_price] && params[:max_price]).present?
       search_min_max_price(params[:min_price], params[:max_price])
     elsif params[:min_price]
       search_min_price(params[:min_price])
@@ -15,10 +16,6 @@ class Api::V1::Items::SearchController < ApplicationController
   end
 
   private
-
-  def price_invalid?
-    !((params[:min_price] || params[:max_price]) || params[:name]).present? || (min_and_max_present? && min_greater_than_max?)
-  end
 
   def search_name(params)
     item = Item.item_by_name(params)
@@ -36,22 +33,6 @@ class Api::V1::Items::SearchController < ApplicationController
     item = Item.max_price(params)
 
     json_formatter(item)
-  end
-
-  def min_or_max_price_and_name_present?
-    (params[:min_price] && params[:name]).present? || (params[:max_price] && params[:name]).present?
-  end
-
-  def negative_prices?
-    (params[:min_price] || params[:max_price]).to_i < 0
-  end
-
-  def min_and_max_present?
-    (params[:min_price] && params[:max_price]).present?
-  end
-
-  def min_greater_than_max?
-    params[:min_price].to_i > params[:max_price].to_i
   end
 
   def search_min_max_price(min_price, max_price)

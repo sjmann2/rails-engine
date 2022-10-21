@@ -319,24 +319,6 @@ describe 'Items API' do
 
         expect(response).to have_http_status(400)
       end
-
-      it 'min price cannot be larger than max price' do
-        get "/api/v1/items/find?min_price=150&max_price=50"
-
-        expect(response).to have_http_status(400)
-      end
-
-      it 'returns status 400 when a min price is not specified' do
-        get "/api/v1/items/find?min_price="
-
-        expect(response).to have_http_status(400)
-      end
-
-      it 'returns status 400 when a max price is not specified' do
-        get "/api/v1/items/find?max_price="
-
-        expect(response).to have_http_status(400)
-      end
     end
 
     describe 'when the record does not exist' do
