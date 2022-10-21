@@ -140,5 +140,21 @@ describe "Merchants API" do
         expect(merchants[:data]).to eq([])
       end
     end
+
+    describe 'if no name is given to search' do
+      it 'returns a status code 400' do
+        get '/api/v1/merchants/find_all?name='
+
+        expect(response).to have_http_status(400)
+      end
+    end
+
+    describe 'if no query param is given' do
+      it 'returns a status code 400' do
+        get '/api/v1/merchants/find_all'
+
+        expect(response).to have_http_status(400)
+      end
+    end
   end
 end
