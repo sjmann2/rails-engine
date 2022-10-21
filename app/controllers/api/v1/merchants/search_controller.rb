@@ -13,10 +13,6 @@ class Api::V1::Merchants::SearchController < ApplicationController
     !params[:name].present? || params[:name].empty?
   end
 
-  def params_empty?
-    params.empty?
-  end
-
   def render_error
     render :json => {error: "invalid search query"}, :status => 400
   end
