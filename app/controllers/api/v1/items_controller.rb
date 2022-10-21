@@ -23,7 +23,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def update 
-    if is_valid_merchant_id?
+    if is_invalid_merchant_id?
       return render status: 404
     end
     update_item(params[:id])
@@ -31,8 +31,8 @@ class Api::V1::ItemsController < ApplicationController
 
   private
   
-  def is_valid_merchant_id?
-    params[:item][:merchant_id] && Merchant.find_by(id: merchant_id = params[:item][:merchant_id]) == nil
+  def is_invalid_merchant_id?
+    params[:item][:merchant_id] && Merchant.find_by(id: merchant_id = params[:item][:merchant_id]).nil?
   end
 
   def set_item

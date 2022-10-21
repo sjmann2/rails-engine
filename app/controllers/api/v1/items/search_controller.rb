@@ -1,6 +1,5 @@
 class Api::V1::Items::SearchController < ApplicationController
   def find 
-      # require 'pry' ; binding.pry
     if min_or_max_price_and_name_present? || negative_prices? || price_invalid?
       render_error
     elsif min_and_max_present?

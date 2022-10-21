@@ -6,7 +6,6 @@ class Api::V1::Merchants::SearchController < ApplicationController
       merchants = Merchant.search_by_name(params[:name])
       json_response(MerchantSerializer.new(merchants))
     end
-
   end
 
   private
