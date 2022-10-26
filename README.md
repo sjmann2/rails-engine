@@ -92,6 +92,7 @@ get http://localhost:3000/api/v1/merchants/1
 ```
 get http://localhost:3000/api/v1/merchants/1/items
 ```
+```
 {
   "data":
     [
@@ -119,7 +120,7 @@ get http://localhost:3000/api/v1/merchants/1/items
                        }
                       ]
                      }
-
+```
 #### Get all items
 
 ```
