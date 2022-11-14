@@ -72,7 +72,7 @@ get /merchants
 #### Get one merchant
 
 ```
-get /merchants/1
+get /merchants/<mechant_id>
 ```
 
 ```
@@ -92,7 +92,7 @@ get /merchants/1
 
 
 ```
-get /merchants/1/items
+get /merchants/<merchant_id>/items
 ```
 ```
 {
@@ -160,7 +160,7 @@ get /items
 ```
 
 #### Get one item
-``` get /items/1 ```
+``` get /items/<item_id> ```
 
 ```
 {
@@ -183,13 +183,13 @@ get /items
 ```post /items```
 
 #### Edit an item
-```patch /items/55```
+```patch /items/<item_id>```
 
 #### Delete an item
-```delete /items/55```
+```delete /items/<item_id>```
 
 ### Get the merchant data for a given item ID
-```get /items/55/merchant```
+```get /items/<item_id>/merchant```
 ```
 {
   "data":
