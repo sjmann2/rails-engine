@@ -34,12 +34,14 @@ Rails Engine is an API that exposes merchant and item data from "Little Esty Sho
     * bundle install
     * bundle exec rspec 
 
-## End Points
+## Endpoints Available
+### Base URL
+``` http://localhost:3000/api/v1/ ```
 
 #### Get all merchants
 
 ```
-get http://localhost:3000/api/v1/merchants
+get /merchants
 ```
 
 ```
@@ -70,7 +72,7 @@ get http://localhost:3000/api/v1/merchants
 #### Get one merchant
 
 ```
-get http://localhost:3000/api/v1/merchants/1
+get /merchants/1
 ```
 
 ```
@@ -90,7 +92,7 @@ get http://localhost:3000/api/v1/merchants/1
 
 
 ```
-get http://localhost:3000/api/v1/merchants/1/items
+get /merchants/1/items
 ```
 ```
 {
@@ -124,7 +126,7 @@ get http://localhost:3000/api/v1/merchants/1/items
 #### Get all items
 
 ```
-get http://localhost:3000/api/v1/items
+get /items
 ```
 
 ```
@@ -158,7 +160,7 @@ get http://localhost:3000/api/v1/items
 ```
 
 #### Get one item
-``` get http://localhost:3000/api/v1/items/1 ```
+``` get /items/1 ```
 
 ```
 {
@@ -178,16 +180,16 @@ get http://localhost:3000/api/v1/items
 ```
 
 #### Create an item
-```post http://localhost:3000/api/v1/items```
+```post /items```
 
 #### Edit an item
-```patch http://localhost:3000/api/v1/items/55```
+```patch /items/55```
 
 #### Delete an item
-```delete http://localhost:3000/api/v1/items/55```
+```delete /items/55```
 
 ### Get the merchant data for a given item ID
-```get http://localhost:3000/api/v1/items/55/merchant```
+```get /items/55/merchant```
 ```
 {
   "data":
@@ -203,7 +205,7 @@ get http://localhost:3000/api/v1/items
 ```
 
 ### Find one item by name
-```http://localhost:3000/api/v1/items/find?name=accusamus```
+```/items/find?name=accusamus```
 ```
 {
   "data":
@@ -222,7 +224,7 @@ get http://localhost:3000/api/v1/items
 ```
 
 ### Find one item by minimum price
-```get http://localhost:3000/api/v1/items/find?min_price=250```
+```get /items/find?min_price=250```
 ```
 {
   "data":
@@ -241,7 +243,7 @@ get http://localhost:3000/api/v1/items
 ```
 
 ### Find one item by maximum price
-``` get http://localhost:3000/api/v1/items/find?max_price=25 ```
+``` get /items/find?max_price=25 ```
 ``` {
     "data":
       {
@@ -259,7 +261,7 @@ get http://localhost:3000/api/v1/items
 ```
 
 ### Find one item by minimum and maximum price
-```get http://localhost:3000/api/v1/items/find?max_price=150&min_price=50```
+```get /items/find?max_price=150&min_price=50```
 ```{
     "data":
       {
@@ -277,7 +279,7 @@ get http://localhost:3000/api/v1/items
 ```
 
 ### Find all merchants by name
-```get http://localhost:3000/api/v1/merchants/find_all?name=sch```
+```get /merchants/find_all?name=sch```
 ```
 {
   "data":
